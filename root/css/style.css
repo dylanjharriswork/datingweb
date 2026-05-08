@@ -254,3 +254,96 @@ input:focus {
         flex: 1;
     }
 }
+
+/* Update your style.css with these */
+.full-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+.radio-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.custom-radio {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    border: 2px solid #e1e8ed;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: left;
+}
+
+.custom-radio:hover {
+    border-color: var(--primary-peach);
+}
+
+.custom-radio input[type="radio"] {
+    accent-color: var(--primary-peach);
+    width: 20px;
+    height: 20px;
+}
+
+.custom-radio span {
+    font-weight: 500;
+    color: var(--complement-teal);
+}
+
+textarea {
+    width: 100%;
+    border: 2px solid #e1e8ed;
+    border-radius: 15px;
+    padding: 15px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: none;
+}
+
+/* Specific overrides for the onboarding flow */
+        .onboarding-card {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .step { display: none; animation: fadeIn 0.4s ease; }
+        .step.active { display: block; }
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            margin-bottom: 40px;
+            border-radius: 2px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-peach);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--complement-teal);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding: 0;
+            opacity: 0.6;
+        }
