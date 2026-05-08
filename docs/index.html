@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- supabase connectivity for waitlist management -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- cloudflare turnstile for captcha like stuff -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">Parity</div>
+        </header>
+
+        <section class="hero">
+            <h1>Dating in <span>Perfect</span> Parity.</h1>
+            <p>Tired of lopsided apps? Parity is <strong>engineered to stay balanced,</strong> meaning we only open the doors when supply and demand are a perfect match. We keep the numbers 1:1 so you can spend less time waiting and more time doing.</p>
+        </section>
+
+        <section id="signup-section" class="form-card">
+            <form id="waitlist-form">
+                <!-- Email input with UNC restriction -->
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="email@unc.edu" 
+                    required
+                >
+                <!-- email error message -->
+                <span id="email-error" style="color: red; font-size: 0.8rem; display: none;">
+                    Please enter a valid @unc.edu email address.
+                </span>
+                <span id="email-collision-error" style="color: red; font-size: 0.8rem; display: none;">
+                    This email address has already been used!
+                </span>
+
+                <!-- Phone input restricted to 10 digits (allows dashes) -->
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    placeholder="123-456-7890" 
+                    required
+                >
+                <!-- phone error message -->
+                <span id="phone-error" style="color: red; font-size: 0.8rem; display: none;">
+                    Please enter a 10-digit phone number.
+                </span>
+                <span id="phone-collision-error" style="color: red; font-size: 0.8rem; display: none;">
+                    This phone number has already been used!
+                </span>
+
+                <!-- User Gender Selection -->
+                <div class="selection-group">
+                    <label class="section-label">I am a...</label>
+                    <div class="gender-selector">
+                        <input type="radio" name="user_gender" id="user_male" value="male">
+                        <label for="user_male">Man</label>
+                        
+                        <input type="radio" name="user_gender" id="user_female" value="female">
+                        <label for="user_female">Woman</label>
+                        
+                        <input type="radio" name="user_gender" id="user_nonbinary" value="nonbinary">
+                        <label for="user_nonbinary">Non-binary</label>
+                    </div>
+                    <!-- User Gender Error Message -->
+                    <span id="user-gender-error" style="color: red; font-size: 0.8rem; display: none;">
+                        Please select your gender.
+                    </span>
+                </div>
+
+                <!-- Target Gender Selection -->
+                <div class="selection-group">
+                    <label class="section-label">Looking for...</label>
+                    <div class="gender-selector">
+                        <input type="radio" name="target_gender" id="target_male" value="male">
+                        <label for="target_male">Men</label>
+                        
+                        <input type="radio" name="target_gender" id="target_female" value="female">
+                        <label for="target_female">Women</label>
+                        
+                        <input type="radio" name="target_gender" id="target_everyone" value="everyone">
+                        <label for="target_everyone">Everyone</label>
+                    </div>
+                    <!-- Target Gender Error Message -->
+                    <span id="target-gender-error" style="color: red; font-size: 0.8rem; display: none;">
+                        Please select who you are looking for.
+                    </span>
+                </div>
+
+                <!-- legal stuff dont delete lol -->
+                <div style="margin: 15px 0; font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #5a6c7d; line-height: 1.3;">
+                    <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="legal-checkbox" name="legal_consent" required style="margin-top: 2px;">
+                        <span>
+                            I agree to the <a href="/docs/tos.html" style="color: #ff8a71; text-decoration: none;">Terms</a> and 
+                            <a href="/docs/privacy.html" style="color: #ff8a71; text-decoration: none;">Privacy Policy</a>, 
+                            and consent to the processing of my data for Parity's entry system.
+                        </span>
+                    </label>
+                </div>
+                <!-- hey bro you have to agree to the checkbox -->
+                <span id="legal-error" style="color: red; font-size: 0.8rem; display: none;">
+                    Please agree to the Terms and Privacy Policy.
+                </span>
+
+                <!-- Cloudflare Turnstile -->
+                <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+
+                <!-- submit button WOW! -->
+                <button type="submit" class="btn-primary">Join the Waitlist</button>
+
+
+            </form>
+
+            <!-- success state -->
+            <div id="success-state" class="success-container" style="display: none;">
+                <h2>You're In.</h2>
+                <p>We'll text you when we're ready.</p>
+                
+                <div class="share-container">
+                    <p class="referral-label">Your Unique Invite Link</p>
+                    <div class="copy-box">
+                        <input type="text" id="referral-link" readonly>
+                        <button id="copy-btn" type="button">Copy</button>
+                    </div>
+                    <span id="copy-status" style="display: none; color: #4CAF50; font-size: 0.8rem; margin-top: 5px;">Link copied!</span>
+                </div>
+                
+                <p class="referral-subtext">Invite a friend who adds balance to skip the line.</p>
+            </div>
+        </section>
+
+        <section class="manifesto">
+            <h2>Dating is broken. <br><span>We’re the fix.</span></h2>
+            <p>Most apps are built on a "more is more" philosophy—more swiping, more users, more noise. But more isn't better. Balance is better. Parity is the only platform that prioritizes the health of the community over the size of the database.</p>
+        </section>
+
+        <section class="gimmick-grid">
+            <div class="info-card">
+                <h3>Dynamic Parity</h3>
+                <p>We balance the scales between seekers and matches in real-time. No more shouting into the void; we only open the doors when someone is actually waiting to meet you.</p>
+            </div>
+            <!-- <div class="info-card">
+                <h3>The Verification Shield</h3>
+                <p>A tiny barrier with a huge impact. By requiring a $1 verification, we eliminate 99% of bots and ensure every profile is backed by a real student.</p>
+            </div> -->
+            <div class="info-card">
+                <h3>The .edu Vault</h3>
+                <p>We’ve replaced the paywall with a strict campus gate. By requiring a verified university email and student ID check, we ensure the person you’re talking to is actually in the lecture hall next to you—not a bot or a scammer 3,000 miles away.</p>
+            </div>
+            <div class="info-card">
+                <h3>Intentional Entry</h3>
+                <p>Our waitlist isn't just a line; it's a guarantee. We find that users who wait for quality are the users you actually want to meet on campus.</p>
+            </div>
+            <div class="info-card">
+                <h3>Inclusive Parity</h3>
+                <p>Balance is for everyone. Whether you’re straight, queer, or non-binary, our logic ensures you enter a pool that is active and intentional. We don't just open doors; we ensure there’s a match waiting on the other side.</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2026 Parity. All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <script type="module" src="/scripts/waitlist.js"></script>
+</body>
+</html>
