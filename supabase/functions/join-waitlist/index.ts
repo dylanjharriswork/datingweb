@@ -45,12 +45,11 @@ Deno.serve(async (req) => {
     }
 
     // 3. Connect to Supabase as an Admin
-    // We use the Service Role Key to bypass RLS since the server is the trusted gatekeeper
+    const secretKeys = JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS') || '{}');
     const supabaseAdmin = createClient(
-		Deno.env.get('SUPABASE_URL') ?? '',
-		Deno.env.get('SUPABASE_SECRET_DEFAULT_KEY') ?? ''
+      Deno.env.get('SUPABASE_URL') ?? '',
+      secretKeys['default'] ?? '' // Use the 'default' secret key from the dictionary
     );
-
     // 4. Insert into the 'waitlist' table
     const { error: insertError } = await supabaseAdmin
       .from('waitlist')

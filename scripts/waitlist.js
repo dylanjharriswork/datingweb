@@ -6,6 +6,8 @@ const successState = document.getElementById('success-state');
 const referralLinkInput = document.getElementById('referral-link');
 const submitBtn = waitlistForm.querySelector('.btn-primary'); // Moved to outer scope
 const legalCheckbox = document.getElementById('legal-checkbox');
+const copyBtn = document.getElementById('copy-btn');
+const copyStatus = document.getElementById('copy-status');
 
 // Error Elements
 const emailError = document.getElementById('email-error');
@@ -39,8 +41,9 @@ function resetBtn(originalText) {
     submitBtn.textContent = originalText || "Join the Waitlist";
 }
 
-// Persistence Check
+// run immediately on load
 window.addEventListener('DOMContentLoaded', () => {
+    // 1. Handle persistence for existing signups
     const isSignedUp = localStorage.getItem('parity_signed_up');
     const savedLink = localStorage.getItem('parity_referral_link');
 
@@ -48,6 +51,16 @@ window.addEventListener('DOMContentLoaded', () => {
         waitlistForm.style.display = 'none';
         successState.style.display = 'block';
         referralLinkInput.value = savedLink;
+        return; // Stop here if they're already done
+    }
+
+    // 2. Capture and save the referral code from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+
+    if (refCode) {
+        // Save it so it survives refreshes or navigation
+        sessionStorage.setItem('parity_pending_ref', refCode.toUpperCase());
     }
 });
 
@@ -62,7 +75,7 @@ waitlistForm.addEventListener('submit', async (e) => {
     submitBtn.textContent = "Joining...";
 
     const formData = new FormData(waitlistForm);
-    const referredBy = getReferralFromURL();
+    const referredBy = sessionStorage.getItem('parity_pending_ref') || getReferralFromURL();// Check sessionStorage first, then URL as fallback
     
     // Turnstile Check
     const turnstileToken = formData.get('cf-turnstile-response');
@@ -145,5 +158,16 @@ waitlistForm.addEventListener('submit', async (e) => {
             resetBtn(originalText);
             break; 
         }
+    }
+});
+
+//copy button logic
+copyBtn.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(referralLinkInput.value);
+        copyStatus.style.display = 'block';
+        setTimeout(() => { copyStatus.style.display = 'none'; }, 2000);
+    } catch (err) {
+        console.error('Failed to copy!', err);
     }
 });
