@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parity | Designing Your Balance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/root/css/style.css">
+</head>
+<body>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo" style="font-size: 2.5rem;">Parity</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </header>
+
+        <section class="form-card onboarding-card">
+            <button class="back-btn" id="back-btn" onclick="prevStep()" style="display:none;">← Back</button>
+            
+            <form id="onboarding-form">
+                
+                <div class="step active" id="step-1">
+                    <h2>Let’s start with your email.</h2>
+                    <p class="hero p" style="padding:0; margin-bottom: 20px;">We’ll use this to save your progress and send your 1:1 invitation.</p>
+                    <input type="email" id="email" placeholder="email@example.com" class="full-input" required>
+                    <button type="button" class="btn-primary" style="width:100%; margin-top:20px;" onclick="validateAndNext(1)">Continue</button>
+                </div>
+
+                <div class="step" id="step-2">
+                    <h2>I identify as...</h2>
+                    <div class="radio-stack">
+                        <label class="custom-radio">
+                            <input type="radio" name="gender" value="man"> <span>A Man</span>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="gender" value="woman"> <span>A Woman</span>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="gender" value="non-binary"> <span>Non-binary</span>
+                        </label>
+                    </div>
+                    <button type="button" class="btn-primary" style="width:100%;" onclick="validateAndNext(2)">Next</button>
+                </div>
+
+                <div class="step" id="step-3">
+                    <h2>I am looking to meet...</h2>
+                    <div class="radio-stack">
+                        <label class="custom-radio">
+                            <input type="radio" name="seeking" value="men"> <span>Men</span>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="seeking" value="women"> <span>Women</span>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="seeking" value="everyone"> <span>Everyone</span>
+                        </label>
+                    </div>
+                    <button type="button" class="btn-primary" style="width:100%;" onclick="validateAndNext(3)">Next</button>
+                </div>
+
+                <div class="step" id="step-4"> 
+                    <h2>Where are you based?</h2>
+                    <p class="hero p" style="padding:0; margin-bottom: 20px;">
+                        Knowing your city helps us tailor our services to your local area.
+                    </p>
+                    
+                    <input type="text" id="city-input" placeholder="Start typing your city..." class="full-input" required autocomplete="off">
+
+                    <button type="button" class="btn-primary" style="width:100%; margin-top:20px;" onclick="validateAndNext(4)">Continue</button>
+                </div>
+
+                <div class="step" id="step-5">
+                    <h2>A Glimpse of You</h2>
+                    <p class="hero p" style="padding:0; font-size: 0.9rem; margin-bottom: 20px;">Describe your perfect local Saturday morning.</p>
+                    <textarea id="saturday" placeholder="A long walk at the Arboretum, then coffee..." required></textarea>
+                    <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="validateAndNext(5)">Final Step</button>
+                </div>
+
+                <div class="step" id="step-6">
+                    <div class="success-icon">⚖️</div>
+                    <h2>Profile Optimized.</h2>
+                    <p style="margin-bottom: 20px;">To ensure a 1:1 human ratio and eliminate bots, we require a $1 verification fee. This secures your spot in the queue.</p>
+                    <div class="stat-item" style="margin-bottom: 20px;">
+                        <span class="stat-value">#12</span>
+                        <span class="stat-label">Your Current Position</span>
+                    </div>
+                    <button type="button" class="btn-primary" style="width:100%;" onclick="finalSubmit()">Verify via Apple Pay ($1)</button>
+                </div>
+
+            </form>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2026 Parity. Built for intentionality.</p>
+        </footer>
+    </main>
+
+    <!-- script stuff -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdeoUqPrx1cJrutwNo4U3CrWxfGqW41xE&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="/root/scripts/onboarding.js"></script>
+</body>
+</html>
