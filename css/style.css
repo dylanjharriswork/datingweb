@@ -442,6 +442,13 @@ textarea {
     color: #95a5a6;
     margin-top: 30px;
     display: block;
+    
+}
+
+.referral-link {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .referral-code-box {
@@ -455,6 +462,7 @@ textarea {
     border: 2px dashed var(--primary-peach); /* Stylized border */
     margin: 12px 0;
     letter-spacing: 4px;
+    
 }
 
 .referral-subtext {
@@ -462,6 +470,7 @@ textarea {
     color: var(--primary-peach);
     font-weight: 500;
     margin-top: 15px;
+    
 }
 
 /* copy box styles */
