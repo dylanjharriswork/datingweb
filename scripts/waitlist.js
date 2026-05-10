@@ -5,18 +5,18 @@ const waitlistForm = document.getElementById('waitlist-form');
 const successState = document.getElementById('success-state');
 const referralLinkInput = document.getElementById('referral-link');
 const submitBtn = waitlistForm.querySelector('.btn-primary'); // Moved to outer scope
-const legalCheckbox = document.getElementById('legal-checkbox');
+// const legalCheckbox = document.getElementById('legal-checkbox');
 const copyBtn = document.getElementById('copy-btn');
 const copyStatus = document.getElementById('copy-status');
 
 // Error Elements
 const emailError = document.getElementById('email-error');
 const emailCollisionError = document.getElementById('email-collision-error');
-const phoneError = document.getElementById('phone-error');
-const phoneCollisionError = document.getElementById('phone-collision-error');
-const userGenderError = document.getElementById('user-gender-error');
-const targetGenderError = document.getElementById('target-gender-error');
-const legalError = document.getElementById('legal-error');
+// const phoneError = document.getElementById('phone-error');
+// const phoneCollisionError = document.getElementById('phone-collision-error');
+// const userGenderError = document.getElementById('user-gender-error');
+// const targetGenderError = document.getElementById('target-gender-error');
+// const legalError = document.getElementById('legal-error');
 
 // Helpers
 const generateReferralCode = (length = 6) => {
@@ -69,7 +69,11 @@ waitlistForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // UI Reset & Loading State
-    [emailError, phoneError, userGenderError, targetGenderError, legalError].forEach(el => el.style.display = 'none');
+    // [emailError, phoneError, userGenderError, targetGenderError, legalError].forEach(el => el.style.display = 'none');
+
+    //temporarily ignoring other fields for retention purposes, so only email error is relevant
+    [emailError].forEach(el => el.style.display = 'none');
+
     submitBtn.disabled = true;
     const originalText = submitBtn.textContent;
     submitBtn.textContent = "Joining...";
@@ -78,25 +82,29 @@ waitlistForm.addEventListener('submit', async (e) => {
     const referredBy = sessionStorage.getItem('parity_pending_ref') || getReferralFromURL();// Check sessionStorage first, then URL as fallback
     
     // Turnstile Check
-    const turnstileToken = formData.get('cf-turnstile-response');
-    if (!turnstileToken) {
-        alert("Please complete the security check.");
-        resetBtn(originalText);
-        return;
-    }
+    // const turnstileToken = formData.get('cf-turnstile-response');
+    // if (!turnstileToken) {
+    //     alert("Please complete the security check.");
+    //     resetBtn(originalText);
+    //     return;
+    // }
 
     const email = formData.get('email')?.toLowerCase().trim();
-    const phone = formData.get('phone')?.replace(/\D/g, '');
-    const userGender = formData.get('user_gender');
-    const targetGender = formData.get('target_gender');
+    //ignore for retention purposes for now
+    // const phone = formData.get('phone')?.replace(/\D/g, '');
+    // const userGender = formData.get('user_gender');
+    // const targetGender = formData.get('target_gender');
+    const phone = null;
+    const userGender = null;
+    const targetGender = null;
 
     // Validation
     let hasError = false;
     if (!email?.endsWith('@unc.edu')) { emailError.style.display = 'block'; hasError = true; }
-    if (phone?.length !== 10) { phoneError.style.display = 'block'; hasError = true; }
-    if (!userGender) { userGenderError.style.display = 'block'; hasError = true; }
-    if (!targetGender) { targetGenderError.style.display = 'block'; hasError = true; }
-    if (!legalCheckbox.checked) { legalError.style.display = 'block'; hasError = true; }
+    // if (phone?.length !== 10) { phoneError.style.display = 'block'; hasError = true; }
+    // if (!userGender) { userGenderError.style.display = 'block'; hasError = true; }
+    // if (!targetGender) { targetGenderError.style.display = 'block'; hasError = true; }
+    // if (!legalCheckbox.checked) { legalError.style.display = 'block'; hasError = true; }
 
     // FIXED: Guard clause correctly handles the return
     if (hasError) {
